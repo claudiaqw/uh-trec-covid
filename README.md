@@ -1,2 +1,2 @@
-# uh_trec_covid
+# uh-trec-covid
 TREC COVID Challenge
