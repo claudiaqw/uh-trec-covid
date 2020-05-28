@@ -16,7 +16,7 @@ TOPICS = "./round2/topics-rnd2.xml"
 VALID_DOCS = "./round2/docids-rnd2.txt"
 QRELS = "./round1/qrels-rnd1.txt"
 
-def read_qrels(filepath):
+def read_qrels(filepath = QRELS):
     result = {}
     res = []
     with open(filepath) as f:
@@ -26,7 +26,7 @@ def read_qrels(filepath):
             res.append([qid, docid, score])
     return res
 
-def read_valid_docs(filepath):
+def read_valid_docs(filepath = VALID_DOCS):
     with open(filepath) as f:
         doc_ids = [line.strip() for line in tqdm(f, desc='loading qrels (by line)', leave=False)]
     return doc_ids
@@ -51,7 +51,7 @@ class Topic():
         return self.index + " " + self.query
 
 class TopicCollection():    
-    def __init__(self, filepath):
+    def __init__(self, filepath = TOPICS):
         self.topics = {}
         tree = ElementTree.parse(filepath)
         for child in tree.getroot():
