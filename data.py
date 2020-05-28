@@ -11,10 +11,10 @@ import itertools as itt
 from xml.etree import ElementTree
 from tqdm import tqdm
 
-METADATA = "./round2/metadata.csv"
-TOPICS = "./round2/topics-rnd2.xml"
-VALID_DOCS = "./round2/docids-rnd2.txt"
-QRELS = "./round1/qrels-rnd1.txt"
+METADATA = "./data/round2/metadata.csv"
+TOPICS = "./data/round2/topics-rnd2.xml"
+VALID_DOCS = "./data/round2/docids-rnd2.txt"
+QRELS = "./data/round1/qrels-rnd2.txt"
 
 def read_qrels(filepath = QRELS):
     result = {}
