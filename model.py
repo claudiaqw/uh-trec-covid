@@ -10,7 +10,7 @@ from utils import split_doc
 class RankerManager():
     def __init__(self, ranking_model, queries, docs, valid_docs, qrel = None, output = "sim_output.txt", run_tag = "sim_run"):
         self.ranker = ranking_model
-        self.queries = queries 
+        self.topics = queries 
         self.docs = docs
         self.valid_docs = valid_docs        
         self.qrel = qrel
@@ -18,24 +18,27 @@ class RankerManager():
         self.run_tag = run_tag
         
     def manage_rank(self):
-        match_result = self.pair()
-        ranked_result = self.interpret_result(match_result, 50)
+        match_result = self.pair_doc_query()
+        ranked_result = self.get_top_k(match_result, 5)
         self.export_result(ranked_result, self.output)
     
-    def pair(self):
+    def pair_doc_query(self):
         result = {}
         for qid in self.topics.topics:
-            query = topics.get_topic(qid)
-            for docid in valid_docs:
-                doc = docs.get_doc(docid)
-                score = self.rank(query, doc)
-                result.setdefault(qid, {})[docid] = int(score)
+            query = self.topics.get_topic(qid).text
+            for docid in self.valid_docs:
+                try:
+                    doc = self.docs.get_doc(docid)
+                    score = self.rank(query, doc)
+                    result.setdefault(qid, {})[docid] = score
+                except Exception as e:
+                    print(e)
         return result    
     
-    def rank(self, query, doc):
+    def rank(self,query, doc):
         return self.ranker.rank(query, doc)
        
-    def interpret_result(self, result, k = 1000):
+    def get_top_k(self, result, k = 500):
         final_result = []
         for qid, scored_docs in result.items():
             sorted_docs = {d:s for d,s in sorted(scored_docs.items(), key=lambda item: item[1], reverse=True)}
@@ -49,7 +52,7 @@ class RankerManager():
         with open(output_file, mode='w+b') as f:
             for (qid, docid, score, pos) in result:
                 line = bytes('%s Q0 %s %s %s %s\n' % (qid, docid, pos, score, self.run_tag), 'utf-8')
-                f.write(line)    
+                f.write(line )    
 
 class BertSimilarity():
     def __init__(self, pretrained_model = 'bert-base-uncased'):
