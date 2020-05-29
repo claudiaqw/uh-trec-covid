@@ -28,7 +28,7 @@ class RankerManager():
             query = self.topics.get_topic(qid).text
             for docid in self.valid_docs:
                 try:
-                    doc = self.docs.get_doc(docid)
+                    doc = self.docs.get_document_from_jsom_no_paragraph_list(docid)['text']
                     score = self.rank(query, doc)
                     result.setdefault(qid, {})[docid] = score
                 except Exception as e:
