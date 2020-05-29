@@ -24,7 +24,7 @@ class RankerManager():
     
     def pair(self):
         result = {}
-        for qid in self.queries.topics:
+        for qid in self.topics.topics:
             query = topics.get_topic(qid)
             for docid in valid_docs:
                 doc = docs.get_doc(docid)
