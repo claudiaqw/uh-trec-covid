@@ -136,7 +136,7 @@ class TrecCovidDatasetManager:
                 raise Exception("Provided cord_uid does not match any document in our dataset")
 
             # load the file data
-            pre_doc = self._load_doc_from_json_(metadata[pmc_file])
+            pre_doc = self._load_doc_from_json_(pmc_file)
         else:
             # Check if the file exists in disk
             pdf_file = metadata['pdf_file']
