@@ -3,6 +3,7 @@ import os
 import io
 import pandas as pd
 import pickle
+import numpy as np
 
 
 class TrecCovidDatasetManager:
@@ -21,14 +22,10 @@ class TrecCovidDatasetManager:
         :return: None
         """
 
-        df = pd.read_csv(self.data_folder_path + 'metadata.csv', low_memory=False, dtype=str)
-
-        # for index, cord_uid, sha, source_x, title, doi, pmcid, pubmed_id, license, abstract, publish_time, \
-        #     authors, journal, mag_id, who_covidence_id, arxiv_id, pdf_json_files, pmc_json_files, url, s2_id \
-        #         in df.itertuples():
+        df = pd.read_csv(self.metadata_file_path, low_memory=False, dtype=str)
 
         for index, cord_uid, sha, source_x, title, doi, pmcid, pubmed_id, license, abstract, publish_time, \
-            authors, journal, mag_id, who_covidence_id, arxiv_id, pdf_json_files, pmc_json_files, url \
+            authors, journal, mag_id, who_covidence_id, arxiv_id, pdf_json_files, pmc_json_files, url, s2_id \
                 in df.itertuples():
 
             # Check there are no repeated keys
@@ -39,6 +36,37 @@ class TrecCovidDatasetManager:
                                                     'abstract': abstract,
                                                     'pdf_file': pdf_json_files,
                                                     'pmc_file': pmc_json_files}
+
+    def load_metadata_from_csv_round2(self):
+        """
+        Load the registries from the metadata file in csv format to a dictionary. This method should be executed before
+        trying to retrieve any document from the collection. It is designed for the metadata and dataset format of the
+        second round of the challenge.
+        :return: None
+        """
+
+        df = pd.read_csv(self.metadata_file_path, low_memory=False, dtype=str)
+
+        for index, cord_uid, sha, source_x, title, doi, pmcid, pubmed_id, license, abstract, publish_time, \
+            authors, journal, microsoft_academic_paper_ID, who_covidence_id, arxiv_id, has_pdf_parse, \
+            has_pmc_xml_parse, full_text_file, url \
+                in df.itertuples():
+
+            # Check there are no repeated keys
+            if cord_uid not in self.metadata_dict:
+                # Check there is a pdf or pmc file corresponding to that key
+                if has_pmc_xml_parse == 'True' or has_pdf_parse == 'True':
+                    metadata = {'title': title, 'abstract': abstract, 'pmc_file': np.NaN, 'pdf_file': np.NaN}
+
+                    if has_pmc_xml_parse == 'True':
+                        pmc_json_files = full_text_file + '/pmc_json/' + pmcid + '.xml.json'
+                        metadata['pmc_file'] = pmc_json_files
+
+                    if has_pdf_parse == 'True':
+                        pdf_json_files = full_text_file + '/pdf_json/' + sha + '.json'
+                        metadata['pdf_file'] = pdf_json_files
+
+                    self.metadata_dict[cord_uid] = metadata
 
     # Saves metadata dict to disk
     def save_metadata_as_pickle(self):
@@ -226,3 +254,17 @@ class TrecCovidDatasetManager:
         pre_doc = self.paper_dict[cord_uid]
         doc = {'cord_uid': cord_uid, 'title': pre_doc['title'], 'text': ''.join(pre_doc['text'])}
         return doc
+
+
+# cov_dm = TrecCovidDatasetManager(data_folder_path='dataset_sample/Round_2/',
+#                                  metadata_file_path='dataset_sample/Round_2/metadata.csv')
+#
+# cov_dm.load_metadata_from_csv_round2()
+#
+# doc = cov_dm.get_document_from_jsom('w1e60xds')
+#
+# print(doc)
+#
+# doc = cov_dm.get_document_from_jsom('zowp10ts')
+#
+# print(doc)
