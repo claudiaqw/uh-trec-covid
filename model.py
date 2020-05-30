@@ -19,7 +19,7 @@ class RankerManager():
         
     def manage_rank(self):
         match_result = self.pair_doc_query()
-        ranked_result = self.get_top_k(match_result, 5)
+        ranked_result = self.get_top_k(match_result, 1000)
         self.export_result(ranked_result, self.output)
     
     def pair_doc_query(self):
