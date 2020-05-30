@@ -29,7 +29,8 @@ class RankerManager():
             for i,docid in enumerate(self.valid_docs):
                 print("Analyzing query %s, doc %s, %s " % (qid, i, docid))
                 try:
-                    doc = self.docs.get_document_from_jsom_no_paragraph_list(docid)['text']
+                    doc = self.docs.get_document_from_dict_no_paragraph_list(docid)['text']
+                    #doc = self.docs.get_document_from_jsom_no_paragraph_list(docid)['text']
                     score = self.rank(query, doc)
                     result.setdefault(qid, {})[docid] = score
                 except Exception as e:
