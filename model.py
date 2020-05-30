@@ -26,7 +26,8 @@ class RankerManager():
         result = {}
         for qid in self.topics.topics:
             query = self.topics.get_topic(qid).text
-            for docid in self.valid_docs:
+            for i,docid in enumerate(self.valid_docs):
+                print("Analyzing query %s, doc %s, %s " % (qid, i, docid))
                 try:
                     doc = self.docs.get_document_from_jsom_no_paragraph_list(docid)['text']
                     score = self.rank(query, doc)
