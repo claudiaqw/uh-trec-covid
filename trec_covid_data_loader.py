@@ -21,7 +21,7 @@ class TrecCovidDatasetManager:
         :return: None
         """
 
-        df = pd.read_csv(self.data_folder_path + 'metadata.csv', low_memory=False, dtype=str)
+        df = pd.read_csv(self.metadata_file_path, low_memory=False, dtype=str)
 
         # for index, cord_uid, sha, source_x, title, doi, pmcid, pubmed_id, license, abstract, publish_time, \
         #     authors, journal, mag_id, who_covidence_id, arxiv_id, pdf_json_files, pmc_json_files, url, s2_id \
