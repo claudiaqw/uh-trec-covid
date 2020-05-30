@@ -2,13 +2,13 @@ from data import TopicCollection, read_valid_docs
 from model import RankerManager, BertSimilarity
 from trec_covid_data_loader import TrecCovidDatasetManager
 
-TOPICS = './data/round2/topics-rnd2.xml'
-VALID_DOCS = './data/round2/docids-rnd2.txt'
-METADATA = './data/round2/metadata.csv'
-DOCS = './data/round2/'
+TOPICS = './data/round3/topics-rnd3.xml'
+VALID_DOCS = './data/round3/docids-rnd3.txt'
+METADATA = './data/round3/metadata.csv'
+DOCS = './data/round3/'
 
 ranking_model = BertSimilarity('./pretrained_models/scibert_scivocab_uncased')
-queries = TopicCollection()
+queries = TopicCollection(TOPICS)
 #valid_docs = read_valid_docs()
 valid_docs = ['wp1hd5w9', '6qpsxmgi']
 
