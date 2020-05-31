@@ -30,12 +30,69 @@ class TrecCovidDatasetManager:
 
             # Check there are no repeated keys
             if cord_uid not in self.metadata_dict:
+                metadata = {'title': title, 'abstract': abstract, 'pdf_file': np.NaN, 'pmc_file': np.NaN}
+
                 # Check there is a pdf or pmc file corresponding to that key
-                if not (pd.isna(pdf_json_files) and pd.isna(pmc_json_files)):
-                    self.metadata_dict[cord_uid] = {'title': title,
-                                                    'abstract': abstract,
-                                                    'pdf_file': pdf_json_files,
-                                                    'pmc_file': pmc_json_files}
+                has_mapping_att = False
+                if not pd.isna(pmc_json_files):
+                    metadata['pmc_file'] = pmc_json_files
+                    has_mapping_att = True
+                elif not pd.isna(pmcid):
+                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                    has_mapping_att = True
+
+                if not pd.isna(pdf_json_files):
+                    metadata['pdf_file'] = pdf_json_files
+                    has_mapping_att = True
+                elif not pd.isna(sha):
+                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                    has_mapping_att = True
+
+                if has_mapping_att:
+                    self.metadata_dict[cord_uid] = metadata
+
+    def load_metadata_subsample_from_csv(self, samples_number):
+        """
+        Load the registries from the metadata file in csv format to a dictionary. Then, a random sample is taken from
+        the documents. Note that the sampling is executed before cheking the validity of the documents, so the final
+        amount of documents can be a bit lower than the 'sample_number' parameter. This method should be executed before
+        trying to retrieve any document from the collection.
+        :param samples_number: The number of documents in the sample
+        :return: None
+        """
+
+        # Reading the CSV
+        df = pd.read_csv(self.metadata_file_path, low_memory=False, dtype=str)
+
+        # Taking a random sample from the documents
+        df = df.sample(n=samples_number, random_state=1)
+
+        for index, cord_uid, sha, source_x, title, doi, pmcid, pubmed_id, license, abstract, publish_time, \
+            authors, journal, mag_id, who_covidence_id, arxiv_id, pdf_json_files, pmc_json_files, url, s2_id \
+                in df.itertuples():
+
+            # Check there are no repeated keys
+            if cord_uid not in self.metadata_dict:
+                metadata = {'title': title, 'abstract': abstract, 'pdf_file': np.NaN, 'pmc_file': np.NaN}
+
+                # Check there is a pdf or pmc file corresponding to that key
+                has_mapping_att = False
+                if not pd.isna(pmc_json_files):
+                    metadata['pmc_file'] = pmc_json_files
+                    has_mapping_att = True
+                elif not pd.isna(pmcid):
+                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                    has_mapping_att = True
+
+                if not pd.isna(pdf_json_files):
+                    metadata['pdf_file'] = pdf_json_files
+                    has_mapping_att = True
+                elif not pd.isna(sha):
+                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                    has_mapping_att = True
+
+                if has_mapping_att:
+                    self.metadata_dict[cord_uid] = metadata
 
     def load_metadata_from_csv_round2(self):
         """
@@ -255,16 +312,23 @@ class TrecCovidDatasetManager:
         doc = {'cord_uid': cord_uid, 'title': pre_doc['title'], 'text': ''.join(pre_doc['text'])}
         return doc
 
+    def get_valid_docs(self):
+        return list(self.metadata_dict.keys())
 
-# cov_dm = TrecCovidDatasetManager(data_folder_path='dataset_sample/Round_2/',
-#                                  metadata_file_path='dataset_sample/Round_2/metadata.csv')
+
+# cov_dm = TrecCovidDatasetManager(data_folder_path='dataset_sample/Round_3/',
+#                                  metadata_file_path='dataset_sample/Round_3/metadata.csv')
 #
-# cov_dm.load_metadata_from_csv_round2()
+# cov_dm.load_metadata_from_csv()
 #
-# doc = cov_dm.get_document_from_jsom('w1e60xds')
-#
-# print(doc)
-#
-# doc = cov_dm.get_document_from_jsom('zowp10ts')
+# doc = cov_dm.get_document_from_jsom('3ulketgy')
 #
 # print(doc)
+#
+# # doc = cov_dm.get_document_from_jsom('zowp10ts')
+#
+# # print(doc)
+#
+# vdl = cov_dm.get_valid_docs()
+# 
+# print(vdl)
