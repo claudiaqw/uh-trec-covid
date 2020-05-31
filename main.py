@@ -10,7 +10,7 @@ DOCS = './data/round2/'
 ranking_model = BertSimilarity('./pretrained_models/scibert_scivocab_uncased')
 queries = TopicCollection()
 #valid_docs = read_valid_docs()
-valid_docs = ['wp1hd5w9', '6qpsxmgi']
+# valid_docs = ['wp1hd5w9', '6qpsxmgi']
 
 
 # Reading the dataset
@@ -28,7 +28,7 @@ cov_dm.create_papers_dict()
 cov_dm.save_docs_dict_as_pickle()
 # cov_dm.load_docs_dict_from_pickle()
 
-
+valid_docs = cov_dm.get_valid_docs()
 
 manager = RankerManager(ranking_model, queries, cov_dm, valid_docs)
 manager.manage_rank()

@@ -330,5 +330,5 @@ class TrecCovidDatasetManager:
 # # print(doc)
 #
 # vdl = cov_dm.get_valid_docs()
-# 
+#
 # print(vdl)
