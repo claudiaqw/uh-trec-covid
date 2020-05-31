@@ -30,12 +30,26 @@ class TrecCovidDatasetManager:
 
             # Check there are no repeated keys
             if cord_uid not in self.metadata_dict:
+                metadata = {'title': title, 'abstract': abstract, 'pdf_file': np.NaN, 'pmc_file': np.NaN}
+
                 # Check there is a pdf or pmc file corresponding to that key
-                if not (pd.isna(pdf_json_files) and pd.isna(pmc_json_files)):
-                    self.metadata_dict[cord_uid] = {'title': title,
-                                                    'abstract': abstract,
-                                                    'pdf_file': pdf_json_files,
-                                                    'pmc_file': pmc_json_files}
+                has_mapping_att = False
+                if not pd.isna(pmc_json_files):
+                    metadata['pmc_file'] = pmc_json_files
+                    has_mapping_att = True
+                elif not pd.isna(pmcid):
+                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                    has_mapping_att = True
+
+                if not pd.isna(pdf_json_files):
+                    metadata['pdf_file'] = pdf_json_files
+                    has_mapping_att = True
+                elif not pd.isna(sha):
+                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                    has_mapping_att = True
+
+                if has_mapping_att:
+                    self.metadata_dict[cord_uid] = metadata
 
     def load_metadata_subsample_from_csv(self, samples_number):
         """
@@ -59,12 +73,26 @@ class TrecCovidDatasetManager:
 
             # Check there are no repeated keys
             if cord_uid not in self.metadata_dict:
+                metadata = {'title': title, 'abstract': abstract, 'pdf_file': np.NaN, 'pmc_file': np.NaN}
+
                 # Check there is a pdf or pmc file corresponding to that key
-                if not (pd.isna(pdf_json_files) and pd.isna(pmc_json_files)):
-                    self.metadata_dict[cord_uid] = {'title': title,
-                                                    'abstract': abstract,
-                                                    'pdf_file': pdf_json_files,
-                                                    'pmc_file': pmc_json_files}
+                has_mapping_att = False
+                if not pd.isna(pmc_json_files):
+                    metadata['pmc_file'] = pmc_json_files
+                    has_mapping_att = True
+                elif not pd.isna(pmcid):
+                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                    has_mapping_att = True
+
+                if not pd.isna(pdf_json_files):
+                    metadata['pdf_file'] = pdf_json_files
+                    has_mapping_att = True
+                elif not pd.isna(sha):
+                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                    has_mapping_att = True
+
+                if has_mapping_att:
+                    self.metadata_dict[cord_uid] = metadata
 
     def load_metadata_from_csv_round2(self):
         """
@@ -284,16 +312,23 @@ class TrecCovidDatasetManager:
         doc = {'cord_uid': cord_uid, 'title': pre_doc['title'], 'text': ''.join(pre_doc['text'])}
         return doc
 
+    def get_valid_docs(self):
+        return list(self.metadata_dict.keys())
 
-# cov_dm = TrecCovidDatasetManager(data_folder_path='dataset_sample/Round_2/',
-#                                  metadata_file_path='dataset_sample/Round_2/metadata.csv')
+
+# cov_dm = TrecCovidDatasetManager(data_folder_path='dataset_sample/Round_3/',
+#                                  metadata_file_path='dataset_sample/Round_3/metadata.csv')
 #
-# cov_dm.load_metadata_from_csv_round2()
+# cov_dm.load_metadata_from_csv()
 #
-# doc = cov_dm.get_document_from_jsom('w1e60xds')
-#
-# print(doc)
-#
-# doc = cov_dm.get_document_from_jsom('zowp10ts')
+# doc = cov_dm.get_document_from_jsom('3ulketgy')
 #
 # print(doc)
+#
+# # doc = cov_dm.get_document_from_jsom('zowp10ts')
+#
+# # print(doc)
+#
+# vdl = cov_dm.get_valid_docs()
+# 
+# print(vdl)
