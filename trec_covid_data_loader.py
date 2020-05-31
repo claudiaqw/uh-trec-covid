@@ -37,16 +37,16 @@ class TrecCovidDatasetManager:
                 if not pd.isna(pmc_json_files):
                     metadata['pmc_file'] = pmc_json_files
                     has_mapping_att = True
-                elif not pd.isna(pmcid):
-                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
-                    has_mapping_att = True
+                # elif not pd.isna(pmcid):
+                #     metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                #     has_mapping_att = True
 
                 if not pd.isna(pdf_json_files):
                     metadata['pdf_file'] = pdf_json_files
                     has_mapping_att = True
-                elif not pd.isna(sha):
-                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
-                    has_mapping_att = True
+                # elif not pd.isna(sha):
+                #     metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                #     has_mapping_att = True
 
                 if has_mapping_att:
                     self.metadata_dict[cord_uid] = metadata
@@ -80,16 +80,16 @@ class TrecCovidDatasetManager:
                 if not pd.isna(pmc_json_files):
                     metadata['pmc_file'] = pmc_json_files
                     has_mapping_att = True
-                elif not pd.isna(pmcid):
-                    metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
-                    has_mapping_att = True
+                # elif not pd.isna(pmcid):
+                #     metadata['pmc_file'] = 'document_parses/pmc_json/' + pmcid + '.xml.json'
+                #     has_mapping_att = True
 
                 if not pd.isna(pdf_json_files):
                     metadata['pdf_file'] = pdf_json_files
                     has_mapping_att = True
-                elif not pd.isna(sha):
-                    metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
-                    has_mapping_att = True
+                # elif not pd.isna(sha):
+                #     metadata['pdf_file'] = 'document_parses/pdf_json/' + sha + '.json'
+                #     has_mapping_att = True
 
                 if has_mapping_att:
                     self.metadata_dict[cord_uid] = metadata
