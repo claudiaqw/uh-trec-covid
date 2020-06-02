@@ -3,6 +3,7 @@
 
 import math
 import torch
+from tqdm import tqdm
 
 def subbatch(toks, maxlen):
     _, DLEN = toks.shape[:2]
@@ -30,3 +31,13 @@ def split_doc(toks, maxlen):
         for s in range(SUBBATCH):
             stack.append(toks[s*S:(s+1)*S])
         return stack, SUBBATCH
+
+def combine_outputs(output_f):
+    result = {}
+    for f in output_f:
+        with open(f) as file:
+            for line in tqdm(file, leave=False):
+                qid, _, docid, _, score, _ = line.split()
+                result.setdefault(qid, {})[docid] = score
+    return result
+
