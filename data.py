@@ -22,7 +22,7 @@ def read_qrels(filepath = QRELS):
     with open(filepath) as f:
         for line in tqdm(f, desc='loading qrels (by line)', leave=False):
             qid, _, docid, score = line.split()
-            result.setdefault(qid, {})[docid] = int(score)
+            result.setdefault(qid, {})[docid] = score
             res.append([qid, docid, score])
     return res
 
@@ -36,7 +36,7 @@ def read_qrels_dict(file):
     file = open(file)
     for line in tqdm(file, desc='loading qrels (by line)', leave=False):
         qid, _, docid, score = line.split()
-        result.setdefault(qid, {})[docid] = int(score)
+        result.setdefault(qid, {})[docid] = score
     return result
 
 class Topic():
